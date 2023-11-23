@@ -76,15 +76,12 @@ splitAtLevel _ X = (X, [])
 splitAtLevel n (Node a l r) = (Node a (takeLevels (n - 1) l) (takeLevels (n - 1) r), X : dropLevels (n - 1) l ++ dropLevels (n - 1) r)
 
 fillXs :: Tree a -> [Tree a] -> (Tree a, [Tree a])
-fillXs = undefined
--- fillXs X (x:xs) = (x, xs)
--- fillXs t [] = (t, [])
--- fillXs (Node a X _) (x:xs) = (Node a x (fillXs ), xs')
--- fillXs ()
-
--- fillXs (Node a l r) (x:xs) = (Node a l' r', xs'')
---   where (l' , xs') = fillXs l xs
---         (r' , xs'') = fillXs r xs'
+fillXs X (t: ts) = (t, ts)
+fillXs (Node a l r) ts = 
+    let
+        (l', ts') = fillXs l ts
+        (r', ts'') = fillXs r ts'
+    in (Node a l' r', ts'')
 
 
 {- Tests -}

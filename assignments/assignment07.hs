@@ -1,16 +1,22 @@
 {- Exercise 1 -}
 
 -- TODO: add *most general* types of div1 - div4
+div1 :: Fractional a => a -> a
 div1 = (/ 2)
 
+div2 :: Fractional a => a -> a
 div2 = (2 /)
 
+div3 :: Fractional a => (a -> b) -> a -> b
 div3 = (. (/ 2))
 
+div4 :: Fractional a => (a -> a) -> a -> a
 div4 = ((/ 2) .)
 
+div5 :: Fractional a => (a -> a) -> a -> a
 div5 f = f . div1
 
+-- div6 :: Fractional a => a -> (a -> a) -> a
 div6 x = \ f -> f (2 / x)
 
 div7 (f, x) = div3 f x
@@ -20,13 +26,19 @@ div8 = \(f, x) -> f (x / 2)
 -- Question 1.1
 {-
 What do div1 and div2 do? Give an example that shows the difference between div1 and div2.
-
+div1 and div2 are functions that divide a number by 2. div1 divides the number by 2, while div2 divides 2 by the number.
+e.g.: div1 4 = 4 / 2 = 2
+      div2 4 = 2 / 4 = 0.5
 -}
 
 -- Question 1.2
 {-
 What do div3 and div4 do?  Give an example that shows the difference between div3 and div4.
+Both functions divide a number by 2 and apply another function to the result/ number. The difference is that div3 first divides
+the number by 2 and then applies the function, while div4 first applies the function and then divides the result by 2.
 
+div3 show 4 = show (4 / 2) = show 2 = "2"
+div4 show 4 = (show 4) / 2 = "4" / 2 = ERROR
 -}
 
 -- Question 1.3
@@ -34,10 +46,18 @@ What do div3 and div4 do?  Give an example that shows the difference between div
 Which of the following pairs of functions are equal? Justify your answers.
 
 (i) div3 and div5
+div3 and div5 are equal, because div5 is just a different notation for div3.
+They have the same most general type, since they are both expecting a function followed by a number
+as input and return the number divided by 2 and then the function applied to the result.
 
 (ii) div5 and flip div6
+div5 and flip div6 are not equal. Both functions apply a function to a number, but div6 divides 2 by the number before applying the function,
+while div5 divides the number by 2 before applying the function.
 
 (iii) div7 and div8
+div7 and div8 are equal, since div8 is just a different notation for div3. It uses the lambda expression to apply the given function to the
+result of the division of the number by 2. div3 does the same, but uses the composition operator instead of the lambda expression. div7 just
+calls div3 with the given function and number as arguments.
 
 -}
 
