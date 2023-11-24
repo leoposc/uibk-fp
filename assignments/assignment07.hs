@@ -88,25 +88,40 @@ getSalary (Employee _ _ s) = s
 
 -- Question 2.1
 mapEmployee :: (Name -> Name) -> (Age -> Age) -> (Salary -> Salary) -> Employee -> Employee
-mapEmployee n a s e = undefined
+mapEmployee updateName updateAge updateSalary (Employee n a s) = Employee (updateName n) (updateAge a) (updateSalary s) 
+
+updateName :: (Name -> Name) -> Employee -> Employee
+updateName f = mapEmployee f id id
+
+updateAge :: (Age -> Age) -> Employee -> Employee
+updateAge f = mapEmployee id f id
+
+updateSalary :: (Salary -> Salary) -> Employee -> Employee
+updateSalary f = mapEmployee id id f
 
 -- Question 2.2
 nextYear :: [Employee] -> [Employee]
-nextYear = undefined
+nextYear = map (updateAge (+ 1)) . map (updateSalary (* 1.2)) 
 
 -- Question 2.3
 
 lowIncomeEmployees :: [Employee] -> [(Name, Salary)]
-lowIncomeEmployees = undefined
+lowIncomeEmployees = map (\e -> (getName e, getSalary e)) . filter (\e -> getSalary e < 60000) 
+
+qsort :: Ord a => [a] -> [a]
+qsort [] = []
+qsort (x : xs) = -- x is pivot element
+  qsort (filter (>= x) xs) ++ [x] ++ qsort (filter (< x) xs)
 
 -- Question 2.4
 qsortBy :: (a -> a -> Bool) -> [a] -> [a]
-qsortBy = undefined
+qsortBy f [] = []
+qsortBy f (x : xs) = qsortBy f (filter (not . (f x)) xs) ++ [x] ++ qsortBy f (filter (f x) xs)
+-- why does this work? I do not understand why i have to negate the first filter and not the second one
 
 -- Question 2.5
 employeesByIncome :: [Employee] -> [Name]
-employeesByIncome = undefined
-
+employeesByIncome = map getName . qsortBy (\e1 e2 -> getSalary e1 >= getSalary e2)
 -- TESTS --
 
 checkEx2 = mapM_ putStrLn [test1, test2, test3, test4, test5]
