@@ -71,18 +71,23 @@ dropLevels 0 t = [t]
 dropLevels n (Node a l r) = X : dropLevels (n - 1) l ++ dropLevels (n - 1) r
 
 splitAtLevel :: Int -> Tree a -> (Tree a, [Tree a])
-splitAtLevel 0 _ = (X, [])
-splitAtLevel _ X = (X, [])
-splitAtLevel n (Node a l r) = (Node a (takeLevels (n - 1) l) (takeLevels (n - 1) r), X : dropLevels (n - 1) l ++ dropLevels (n - 1) r)
+splitAtLevel _ X = (X, [X])
+splitAtLevel i t@(Node x l r)
+  | i <= 0 = (X, [t])
+  | otherwise = (Node x t1 t2, ts1 ++ ts2)
+  where
+    (t1, ts1) = splitAtLevel (i-1) l
+    (t2, ts2) = splitAtLevel (i-1) r
 
 fillXs :: Tree a -> [Tree a] -> (Tree a, [Tree a])
-fillXs X (t: ts) = (t, ts)
-fillXs (Node a l r) ts = 
-    let
-        (l', ts') = fillXs l ts
-        (r', ts'') = fillXs r ts'
-    in (Node a l' r', ts'')
+fillXs t [] = (t, [])
+fillXs X (t:ts) = (t, ts)
+fillXs (Node x l r) ts = (Node x t1 t2, ts2)
+  where
+  (t1, ts1) = fillXs l ts
+  (t2, ts2) = fillXs r ts1
 
+{- Exercise 3 -}
 
 {- Tests -}
 checkEx1 = sequence_ [test1, test2, test3, test4]
