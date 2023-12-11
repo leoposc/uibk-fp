@@ -26,7 +26,7 @@ prop_splitAtLevel_implies_fillXs i t s ss =
     splitResult ==> fillResult where
         splitResult = splitTree == s && splitList == ss where
             (splitTree, splitList) = splitAtLevel i t
-        fillResult = fillTree == t && fillList == ss where
+        fillResult = fillTree == t && null fillList where
             (fillTree, fillList) = fillXs s ss
             
 
